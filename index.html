@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>meet</title>
+  </head>
+  <body>
+    <h1>Chat!</h1>
+    <input type="text" id="name" placeholder="enter your name" />
+    <button onclick="register()">Register</button>
+    <div id="chat"></div>
+    <input type="text" id="chatInput" placeholder="type something..." />
+    <button onclick="send()">send</button>
+    <div id="info"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      let name = "";
+      function register() {
+        name = document.querySelector("#name").value;
+      }
+      var socket = io();
+      socket.on("chat", function (data) {
+        document.querySelector("#chat").innerHTML +=
+          "<br/>" + data.name + " : " + data.message;
+      });
+      function send() {
+        if (name) {
+          socket.emit("data", {
+            name: name,
+            message: document.querySelector("#chatInput").value,
+          });
+        } else {
+          document.querySelector("#info").innerHTML =
+            "please register your name to send a message";
+        }
+      }
+    </script>
+  </body>
+</html>
